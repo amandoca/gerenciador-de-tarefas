@@ -142,7 +142,7 @@ O **Kanban Tarefando** é uma SPA (Single Page Application) para gerenciamento d
 
 1. Clone o repositório: `git clone ...`
 2. Instale dependências: `npm install`
-3. Rode localmente: `npm run dev`
+3. Rode localmente: `npm run serve`
 4. Acesse em: [http://localhost:8080](http://localhost:8080)
 
 ### Build para produção
