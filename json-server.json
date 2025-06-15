@@ -1,0 +1,6 @@
+{
+    "port": 5000,
+    "host": "localhost",
+    "cors": true
+  }
+  
