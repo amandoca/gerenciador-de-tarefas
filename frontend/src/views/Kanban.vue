@@ -20,7 +20,9 @@
             <template #item="{ element: task }">
               <div class="task" :data-id="task.id" @click="editTask(task)">
                 <h3 :title="task.title">{{ task.title }}</h3>
+
                 <div class="task-meta">
+                  <!-- Ícone de descrição -->
                   <span
                     v-if="task.description"
                     class="icon"
@@ -35,6 +37,8 @@
                       />
                     </svg>
                   </span>
+
+                  <!-- Ícone de checklist -->
                   <span
                     v-if="task.checklist?.length"
                     class="icon"
@@ -49,11 +53,11 @@
                         fill="none"
                       />
                     </svg>
-                    <span class="check-count"
-                      >{{ getChecklistCompleted(task) }}/{{
+                    <span class="check-count">
+                      {{ getChecklistCompleted(task) }}/{{
                         task.checklist.length
-                      }}</span
-                    >
+                      }}
+                    </span>
                   </span>
                 </div>
               </div>
@@ -80,19 +84,33 @@
 </template>
 
 <script>
+import { ref, watch, onMounted } from 'vue'
 import draggable from 'vuedraggable'
 import TaskModal from '@/components/TaskModal.vue'
-import { ref, watch, onMounted } from 'vue'
 import mario from '@/assets/mario-bross.webp'
+import api from '@/services/api'
+import {
+  fetchTasks,
+  createTask,
+  updateTask,
+  deleteTask
+} from '@/services/task_service'
 
 export default {
-  components: { draggable, TaskModal },
+  name: 'KanbanBoard',
+
+  components: {
+    draggable,
+    TaskModal
+  },
+
   props: {
     currentBackground: String,
     filteredUserId: String,
     searchTerm: String
   },
 
+  // 👉 Composition API só para tratar o background
   setup(props) {
     const backgroundUrl = ref('')
 
@@ -117,65 +135,74 @@ export default {
     return { backgroundUrl }
   },
 
+  // 👉 Options API para o resto (tasks, columns, users, modal etc.)
   data() {
     return {
       columns: [],
       users: [],
       tasks: [],
       showModal: false,
-      selectedTask: null
+      selectedTask: null,
+      loading: false,
+      errorMsg: ''
     }
   },
 
   async created() {
     await this.fetchData()
-    this.loadTasksFromStorage()
-    this.$emit('update-users', this.users)
   },
 
   methods: {
+    // 🔹 Busca columns, users e tasks do backend
     async fetchData() {
-      const [columnsRes, usersRes] = await Promise.all([
-        fetch('http://localhost:5000/columns'),
-        fetch('http://localhost:5000/users')
-      ])
+      try {
+        this.loading = true
+        this.errorMsg = ''
 
-      this.columns = await columnsRes.json()
-      this.users = await usersRes.json()
-      // 🔻 ADICIONE ESTA LINHA:
-      this.$emit('update-users', this.users)
+        const [columnsRes, usersRes, tasksRes] = await Promise.all([
+          api.get('/kanban/columns'),
+          api.get('/kanban/users'),
+          fetchTasks() // vem do task_service.js
+        ])
+
+        this.columns = columnsRes.data
+        this.users = usersRes.data
+        this.tasks = tasksRes
+
+        // avisa o pai sobre os usuários
+        this.$emit('update-users', this.users)
+      } catch (error) {
+        console.error(error)
+        this.errorMsg = 'Erro ao carregar dados do Kanban.'
+      } finally {
+        this.loading = false
+      }
     },
+
     truncate(text, maxLength) {
       if (!text) return ''
       return text.length > maxLength ? text.slice(0, maxLength) + '...' : text
     },
-    getChecklistCompleted(task) {
-      return task.checklist.filter((item) => item.completed).length
-    },
-    handleDeleteTask(taskId) {
-      this.tasks = this.tasks.filter((t) => t.id !== taskId)
-      this.saveTasksToStorage()
-      this.showModal = false
-    },
-    loadTasksFromStorage() {
-      const stored = localStorage.getItem('kanbanTasks')
-      this.tasks = stored ? JSON.parse(stored) : []
-    },
-    filteredTasks(columnId) {
-      let tasks = this.tasks.filter((t) => t.columnId == columnId)
 
-      // Use as PROPS!!
+    getChecklistCompleted(task) {
+      return task.checklist?.filter((item) => item.completed).length || 0
+    },
+
+    // 🔹 Filtra tarefas por coluna + usuário + busca
+    filteredTasks(columnId) {
+      let tasks = this.tasks.filter(
+        (t) => String(t.columnId) === String(columnId)
+      )
+
       const filteredUserId = this.filteredUserId
       const searchTerm = this.searchTerm
 
-      // Log inicial
-
-      // Filtro por usuário
       if (filteredUserId) {
-        tasks = tasks.filter((t) => t.assignedUser == filteredUserId)
+        tasks = tasks.filter(
+          (t) => String(t.assignedUser) === String(filteredUserId)
+        )
       }
 
-      // Filtro por busca (título/descrição)
       if (searchTerm && searchTerm.length > 1) {
         const search = searchTerm.toLowerCase()
         tasks = tasks.filter(
@@ -188,35 +215,7 @@ export default {
       return tasks
     },
 
-    setFilteredUser(id) {
-      this.filteredUserId = id
-    },
-    setSearchTerm(term) {
-      this.searchTerm = term
-    },
-    onTaskMoved(evt, newColumnId) {
-      // Pega o elemento DOM arrastado
-      const el = evt.item
-      // Pega o ID salvo em data-id
-      const taskId = el.getAttribute('data-id')
-
-      // Busca a task verdadeira no array principal
-      const task = this.tasks.find((t) => String(t.id) === String(taskId))
-
-      if (task) {
-        task.columnId = String(newColumnId)
-        this.saveTasksToStorage()
-        this.$forceUpdate?.()
-      } else {
-        console.warn('Task não encontrada ao mover!', taskId)
-      }
-    },
-    saveTasksToStorage() {
-      localStorage.setItem('kanbanTasks', JSON.stringify(this.tasks))
-    },
-    getTasksForColumn(columnId) {
-      return this.tasks.filter((task) => task.columnId == columnId)
-    },
+    // 🔹 Abrir modal para criar nova tarefa
     addTask(column) {
       this.selectedTask = {
         title: '',
@@ -228,33 +227,77 @@ export default {
       }
       this.showModal = true
     },
+
+    // 🔹 Abrir modal para editar tarefa existente
     editTask(task) {
       this.selectedTask = { ...task }
       this.showModal = true
     },
-    handleSaveTask(task) {
-      const existingIndex = this.tasks.findIndex((t) => t.id === task.id)
 
-      if (existingIndex !== -1) {
-        this.tasks[existingIndex] = task
-      } else {
-        task.id = Date.now()
-        this.tasks.push(task)
+    // 🔹 Salvar (criar ou atualizar) tarefa no backend
+    async handleSaveTask(task) {
+      try {
+        const existingIndex = this.tasks.findIndex((t) => t.id === task.id)
+        let savedTask
+
+        if (existingIndex !== -1) {
+          // atualizar tarefa existente
+          savedTask = await updateTask(task.id, task)
+          this.tasks.splice(existingIndex, 1, savedTask)
+        } else {
+          // criar nova tarefa
+          savedTask = await createTask(task)
+          this.tasks.push(savedTask)
+        }
+
+        const isDone = String(savedTask.columnId) === '3'
+        if (isDone) {
+          this.notifyTaskCompleted(savedTask.title)
+        }
+
+        this.showModal = false
+      } catch (error) {
+        console.error(error)
+        this.errorMsg = 'Erro ao salvar tarefa.'
+      }
+    },
+
+    // 🔹 Excluir tarefa no backend
+    async handleDeleteTask(taskId) {
+      try {
+        await deleteTask(taskId)
+        this.tasks = this.tasks.filter((t) => t.id !== taskId)
+        this.showModal = false
+      } catch (error) {
+        console.error(error)
+        this.errorMsg = 'Erro ao excluir tarefa.'
+      }
+    },
+
+    // 🔹 Quando arrasta card de uma coluna para outra
+    async onTaskMoved(evt, newColumnId) {
+      const el = evt.item
+      const taskId = el.getAttribute('data-id')
+      const task = this.tasks.find((t) => String(t.id) === String(taskId))
+
+      if (!task) {
+        console.warn('Task não encontrada ao mover!', taskId)
+        return
       }
 
-      const isDone = task.columnId === '3'
-      if (isDone) this.notifyTaskCompleted(task.title)
+      const previousColumnId = task.columnId
+      task.columnId = String(newColumnId)
 
-      this.saveTasksToStorage()
-      this.showModal = false
-    },
-    onTaskDrop(event, targetColumnId) {
-      if (event && event.added) {
-        const movedTask = event.added.element
-        movedTask.columnId = targetColumnId
-        this.saveTasksToStorage()
+      try {
+        await updateTask(task.id, { columnId: task.columnId })
+      } catch (error) {
+        console.error(error)
+        this.errorMsg = 'Erro ao mover tarefa.'
+        // volta visualmente se der ruim no backend
+        task.columnId = previousColumnId
       }
     },
+
     notifyTaskCompleted(title) {
       if (Notification.permission === 'granted') {
         new Notification('🎉 Tarefa concluída!', {
@@ -422,12 +465,12 @@ export default {
 /* Tarefas/cards */
 .task {
   background: linear-gradient(110deg, #202439 60%, #202c42 100%);
-  padding: 20px 24px 20px 24px; /* <-- padding aumentado! */
-  margin-bottom: 16px; /* um pouco mais de espaço entre os cards */
-  border-radius: 14px; /* arredondamento maior fica bonito */
-  min-height: 80px; /* mais altura */
-  max-height: 210px; /* + espaço para textos maiores */
-  width: 340px; /* ocupa toda a coluna */
+  padding: 20px 24px 20px 24px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  min-height: 80px;
+  max-height: 210px;
+  width: 340px;
   box-sizing: border-box;
   cursor: pointer;
   color: #e7eafd;
@@ -436,7 +479,7 @@ export default {
   justify-content: space-between;
   box-shadow: 0 2px 12px #23284933;
   border: 1.7px solid #202c42;
-  font-size: 1.08rem; /* fonte levemente maior */
+  font-size: 1.08rem;
   transition:
     box-shadow 0.18s,
     border 0.18s,
@@ -448,7 +491,7 @@ export default {
   box-shadow: 0 4px 18px #ffe08a2c;
 }
 .task h3 {
-  font-size: 1.12rem; /* título um pouco maior */
+  font-size: 1.12rem;
   font-weight: bold;
   margin: 0 0 8px;
   white-space: nowrap;

@@ -23,17 +23,35 @@ Este documento cobre a arquitetura, as principais funcionalidades, fluxos, decis
 
 O **Kanban Tarefando** é uma SPA (Single Page Application) para gerenciamento de tarefas baseada no método Kanban, com interface moderna, foco em usabilidade e uso de recursos modernos de front-end. É ideal para equipes pequenas e profissionais autônomos.
 
+A nova versão utiliza **back-end real**, com API Node.js + MySQL, garantindo persistência no banco de dados, autenticação JWT e isolamento das tarefas por usuário.
+
 ---
 
 ## 2. 🏗️ Arquitetura e Tecnologias
 
-- **Framework:** Vue.js 3
-- **Build Tool:** Vite
-- **Drag & Drop:** Vue Draggable
-- **Notificações:** Vue Toastification
-- **Armazenamento Local:** localStorage
-- **Estilização:** CSS3 com abordagem mobile-first e componentes reutilizáveis
-- **Integrações:** Google Auth, API REST, Push Notifications
+### **Front-end**
+
+* Vue.js 3
+* Vite
+* Vue Draggable
+* Axios
+* CSS3 (mobile-first)
+
+### **Back-end (NOVO)**
+
+* Node.js + Express
+* MySQL
+* JWT (autenticação)
+* bcryptjs
+* dotenv
+* mysql2 (promise)
+* CORS
+
+### **Integrações**
+
+* Google Auth (opcional)
+* API REST própria
+* Notificações nativas
 
 ---
 
@@ -41,26 +59,26 @@ O **Kanban Tarefando** é uma SPA (Single Page Application) para gerenciamento d
 
 ### 🔒 Autenticação
 
-- Login local (mock/real) com email e senha
-- Login Google com OAuth
+* Login com email e senha
+* JWT armazenado no navegador
+* Rotas protegidas no back-end
+* Cada usuário só vê suas próprias tarefas
 
 ### 📋 Gerenciamento de Tarefas
 
-- Criar, editar, excluir tarefas
-- Organizar tarefas em quadros e colunas (Kanban)
-- Atribuir tarefas a usuários
-- Adicionar descrição, prazo, checklist e tipo (tarefa, história, bug)
-- Checklist com barra de progresso visual
-- Drag & drop entre colunas
+* Criar, editar e excluir tarefas
+* Arrastar (drag & drop) entre colunas
+* Adicionar descrição, prazo e checklist
+* Atribuir responsáveis (opcional)
 
 ### 🔍 Busca & Filtros
 
-- Busca em tempo real por título/descrição
-- Filtro de tarefas por responsável
+* Filtro por usuário
+* Busca em tempo real por título/descrição
 
 ### 🚨 Notificações
 
-- Notificação toast para eventos importantes (conclusão, exclusão, etc)
+* Toast para eventos importantes
 
 ---
 
@@ -71,6 +89,7 @@ O **Kanban Tarefando** é uma SPA (Single Page Application) para gerenciamento d
  ┣ 📂assets/          # Imagens e recursos visuais
  ┣ 📂components/      # Componentes Vue (Sidebar, Header, TaskModal...)
  ┣ 📂views/           # Páginas principais (Login, Kanban, etc)
+ ┣ 📂services/        # API, auth, tasks
  ┣ 📜 App.vue         # Raiz da aplicação
  ┣ 📜 main.js         # Bootstrap do projeto
 ```
@@ -81,74 +100,104 @@ O **Kanban Tarefando** é uma SPA (Single Page Application) para gerenciamento d
 
 ### Login
 
-- Usuário acessa a tela de login
-- Validação local (mock) ou integração com Google
-- Usuário autenticado acessa o Kanban
+* Usuário acessa a tela de login
+* Envia email/senha para a API
+* Se válido → recebe token JWT
+* Token é enviado automaticamente pelo Axios
 
 ### Tarefas
 
-- Botão “+ Adicionar Tarefa” abre modal de criação
-- Modal permite cadastrar todos os campos relevantes
-- Tarefa é salva no localStorage e aparece instantaneamente
-- Edição/exclusão também via modal
+* Botão “+ Adicionar Tarefa” abre modal
+* Dados são enviados para `/api/kanban/tasks`
+* Sistema salva no banco e retorna a task
+* Tarefa aparece instantaneamente no quadro
 
 ### Drag & Drop
 
-- Usuário pode arrastar tarefas entre colunas
+* Trocar de coluna envia PUT `/api/kanban/tasks/:id`
 
 ### Busca/Filtro
 
-- Barra de busca filtra tarefas em tempo real
-- Filtros de usuário destacam cards atribuídos
+* Filtro e busca são aplicados apenas no front
 
 ---
 
 ## 6. 💾 Persistência de Dados
 
-- **localStorage:** Todas as tarefas e preferências (background, usuário logado, etc.) são persistidas localmente no navegador.
-- **Mock API:** Pode ser facilmente acoplada a uma API REST real, seguindo contrato de dados do frontend.
-- **Estrutura dos dados de tarefa:**
+### 🌐 **Agora persistência é REAL via API + MySQL.**
 
-```js
-{
-  id: Number,
-  title: String,
-  description: String,
-  dueDate: String (YYYY-MM-DD),
-  assignedUser: String (userId),
-  columnId: String,
-  type: 'tarefa' | 'historia' | 'bug',
-  checklist: [
-    { text: String, completed: Boolean }
-  ]
-}
-```
+O localStorage ficou restrito a:
+
+* Token JWT
+* Usuário logado
+* Preferências visuais (ex.: background)
+
+### 🗄️ Estrutura do Banco de Dados (MySQL)
+
+**USERS**
+
+* ID, NAME, EMAIL, PASSWORD_HASH
+
+**KANBAN_COLUMNS**
+
+* ID, NAME, ORDER_INDEX
+
+**KANBAN_TASKS**
+
+* ID, USER_ID, TITLE, DESCRIPTION, DUE_DATE, COLUMN_ID, ASSIGNED_USER_ID
+
+**KANBAN_TASK_CHECKLIST_ITEMS**
+
+* ID, TASK_ID, TEXT, COMPLETED
+
+### 🔐 Importante
+
+Cada tarefa está vinculada ao usuário autenticado através de `USER_ID` do token JWT.
 
 ---
 
 ## 7. 🧹 Boas Práticas e Convenções
 
-- Componentização e reuso de lógica
-- Código documentado, nomeação clara
-- Separação de responsabilidades (views, components, utils, services)
-- Validações client-side para inputs do usuário
-- Padrão de commit e branch para PRs
+* Componentização e reuso de lógica
+* Controllers enxutos
+* Queries parametrizadas (evita SQL Injection)
+* Nomenclatura clara e padronizada
+* Commits organizados
+* Uso de .env e variáveis seguras
+* Hash seguro de senhas
 
 ---
 
 ## 8. 🚀 Deploy e Execução Local
 
-### Instalação e Execução
+### 📦 **Back-end**
 
-1. Clone o repositório: `git clone ...`
-2. Instale dependências: `npm install`
-3. Rode localmente: `npm run serve`
-4. Acesse em: [http://localhost:8080](http://localhost:8080)
+```bash
+cd backend
+npm install
+npm run dev
+```
 
-### Build para produção
+API iniciará em: **[http://localhost:4000](http://localhost:4000)**
 
-- `npm run build` gera versão otimizada em `/dist`
+### 💻 **Front-end**
+
+```bash
+cd frontend
+npm install
+npm run serve
+```
+
+Acesse em: **[http://localhost:8080](http://localhost:8080)**
+
+### ⚙️ Build de Produção (front-end)
+
+```bash
+npm run build
+```
+
+Gera pastas otimizadas em `/dist`.
 
 ---
 
-**Desenvolvido para desafio técnico**
+**Desenvolvido para desafio técnico — versão com banco de dados MySQL e API real.**

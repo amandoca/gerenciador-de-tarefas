@@ -87,15 +87,43 @@
 <script>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useToast } from 'vue-toastification'
+import { login as loginRequest } from '@/services/auth_service'
 
 export default {
   setup() {
     const router = useRouter()
+    const toast = useToast()
+
     const email = ref('')
     const password = ref('')
     const errorMsg = ref('')
     const loading = ref(false)
 
+    // 🔹 Login via backend (email + senha)
+    const handleLocalLogin = async () => {
+      loading.value = true
+      errorMsg.value = ''
+
+      try {
+        const { user } = await loginRequest(email.value, password.value)
+
+        toast.success(`Bem-vinda, ${user.name}! ✨`)
+        router.push('/kanban')
+      } catch (err) {
+        console.error(err)
+
+        const backendMessage =
+          err?.response?.data?.message || 'Email ou senha inválidos.'
+
+        errorMsg.value = backendMessage
+        toast.error(backendMessage)
+      } finally {
+        loading.value = false
+      }
+    }
+
+    // 🔹 Login via Google (ainda local)
     const handleCredentialResponse = (response) => {
       const token = response.credential
       const userInfo = parseJwt(token)
@@ -104,10 +132,14 @@ export default {
           name: userInfo.given_name,
           email: userInfo.email
         }
+        // Aqui ainda é só local — depois, se quiser, integramos com o backend
         localStorage.setItem('loggedUser', JSON.stringify(userData))
+        // não temos JWT válido do seu backend aqui
+        // então as tasks protegidas por token podem não funcionar com esse login
         router.push('/kanban')
       }
     }
+
     const parseJwt = (token) => {
       try {
         return JSON.parse(atob(token.split('.')[1]))
@@ -116,27 +148,7 @@ export default {
         return null
       }
     }
-    const handleLocalLogin = () => {
-      loading.value = true
-      errorMsg.value = ''
-      setTimeout(() => {
-        const storedUsers = JSON.parse(localStorage.getItem('users') || '[]')
-        const hashedPassword = btoa(password.value)
-        const foundUser = storedUsers.find(
-          (u) => u.email === email.value && u.password === hashedPassword
-        )
-        if (!foundUser) {
-          errorMsg.value = 'Email ou senha inválidos.'
-          loading.value = false
-          return
-        }
-        localStorage.setItem(
-          'loggedUser',
-          JSON.stringify({ name: foundUser.name, email: foundUser.email })
-        )
-        router.push('/kanban')
-      }, 500)
-    }
+
     const goToRegister = () => router.push('/register')
 
     onMounted(() => {
