@@ -106,6 +106,7 @@
 <script>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import api from '@/services/api'
 
 export default {
   name: 'Register',
@@ -117,29 +118,33 @@ export default {
     const errorMsg = ref('')
     const loading = ref(false)
 
-    const handleRegister = () => {
+    const handleRegister = async () => {
       loading.value = true
       errorMsg.value = ''
-      setTimeout(() => {
-        const storedUsers = JSON.parse(localStorage.getItem('users') || '[]')
-        const userExists = storedUsers.some((u) => u.email === email.value)
-        if (userExists) {
-          errorMsg.value = 'E-mail já cadastrado!'
-          loading.value = false
-          return
-        }
-        const hashedPassword = btoa(password.value)
-        const newUser = {
+
+      try {
+        // chama o backend: POST /api/auth/register
+        const response = await api.post('/auth/register', {
           name: name.value,
           email: email.value,
-          password: hashedPassword
-        }
-        storedUsers.push(newUser)
-        localStorage.setItem('users', JSON.stringify(storedUsers))
-        loading.value = false
-        alert('Conta criada com sucesso!')
+          password: password.value
+        })
+
+        console.log('Usuário criado:', response.data)
+
+        alert('Conta criada com sucesso! Faça login para continuar.')
         router.push('/login')
-      }, 700)
+      } catch (error) {
+        console.error(error)
+
+        const backendMessage =
+          error?.response?.data?.message || 'Erro ao cadastrar usuário.'
+
+        errorMsg.value = backendMessage
+        alert(backendMessage)
+      } finally {
+        loading.value = false
+      }
     }
 
     const goToLogin = () => {

@@ -1,26 +1,23 @@
-// src/routes/kanban.routes.js
-const express = require('express')
+const express = require("express");
+const router = express.Router();
+
 const {
   getKanbanColumns,
   getKanbanUsers,
   getKanbanTasks,
   createKanbanTask,
   updateKanbanTask,
-  deleteKanbanTask
-} = require('../controllers/kanban.controller')
+  deleteKanbanTask,
+  moveKanbanTask,
+} = require("../controllers/kanban.controller");
 
-const kanbanRouter = express.Router()
+router.get("/columns", getKanbanColumns);
+router.get("/users", getKanbanUsers);
+router.get("/tasks", getKanbanTasks);
 
-// Colunas do quadro
-kanbanRouter.get('/columns', getKanbanColumns)
+router.post("/tasks", createKanbanTask);
+router.put("/tasks/:id", updateKanbanTask); // atualização completa
+router.put("/tasks/:id/move", moveKanbanTask); // mover coluna
+router.delete("/tasks/:id", deleteKanbanTask);
 
-// Usuários (para atribuir tarefas)
-kanbanRouter.get('/users', getKanbanUsers)
-
-// Tarefas
-kanbanRouter.get('/tasks', getKanbanTasks)
-kanbanRouter.post('/tasks', createKanbanTask)
-kanbanRouter.put('/tasks/:id', updateKanbanTask)
-kanbanRouter.delete('/tasks/:id', deleteKanbanTask)
-
-module.exports = kanbanRouter
+module.exports = router;

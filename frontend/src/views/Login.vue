@@ -108,7 +108,7 @@ export default {
       try {
         const { user } = await loginRequest(email.value, password.value)
 
-        toast.success(`Bem-vinda, ${user.name}! ✨`)
+        toast.success(`Bem-vindo(a), ${user.name}! ✨`)
         router.push('/kanban')
       } catch (err) {
         console.error(err)

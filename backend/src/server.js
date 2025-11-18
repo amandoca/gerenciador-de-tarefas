@@ -1,7 +1,7 @@
 // src/server.js
 
 // Load environment variables
-require("dotenv").config();
+require("./load-env")();
 
 // Express framework
 const express = require("express");

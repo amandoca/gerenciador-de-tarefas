@@ -201,6 +201,9 @@ export default {
       task: this.initialTask
         ? {
             ...this.initialTask,
+            dueDate: this.initialTask.dueDate
+              ? this.initialTask.dueDate.slice(0, 10)
+              : '',
             checklist: this.initialTask.checklist || [],
             type: this.initialTask.type || 'tarefa'
           }
@@ -214,6 +217,7 @@ export default {
             columnId: this.columns[0]?.id,
             type: 'tarefa'
           },
+
       newItemText: '',
       menuOpen: null,
       showDeleteChecklistModal: false,

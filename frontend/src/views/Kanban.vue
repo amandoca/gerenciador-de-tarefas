@@ -12,13 +12,18 @@
           <h2>{{ column.name }}</h2>
 
           <draggable
-            :list="filteredTasks(column.id)"
+            :list="columnTasks[String(column.id)] || []"
             :group="{ name: 'tasks', pull: true, put: true }"
-            itemKey="id"
+            item-key="id"
             @add="(evt) => onTaskMoved(evt, column.id)"
           >
             <template #item="{ element: task }">
-              <div class="task" :data-id="task.id" @click="editTask(task)">
+              <div
+                v-if="shouldShowTask(task)"
+                class="task"
+                :data-id="task.id"
+                @click="editTask(task)"
+              >
                 <h3 :title="task.title">{{ task.title }}</h3>
 
                 <div class="task-meta">
@@ -93,7 +98,8 @@ import {
   fetchTasks,
   createTask,
   updateTask,
-  deleteTask
+  deleteTask,
+  moveTask
 } from '@/services/task_service'
 
 export default {
@@ -141,6 +147,7 @@ export default {
       columns: [],
       users: [],
       tasks: [],
+      columnTasks: {}, // ← listas reais por coluna usadas pelo draggable
       showModal: false,
       selectedTask: null,
       loading: false,
@@ -153,7 +160,7 @@ export default {
   },
 
   methods: {
-    // 🔹 Busca columns, users e tasks do backend
+    // 🔹 Busca columns, users e tasks do backend e monta columnTasks
     async fetchData() {
       try {
         this.loading = true
@@ -169,6 +176,22 @@ export default {
         this.users = usersRes.data
         this.tasks = tasksRes
 
+        // monta um mapa colunaId -> array de tasks (usado pelo draggable)
+        const map = {}
+        this.columns.forEach((col) => {
+          map[String(col.id)] = []
+        })
+
+        this.tasks.forEach((task) => {
+          const key = String(task.columnId)
+          if (!map[key]) {
+            map[key] = []
+          }
+          map[key].push(task)
+        })
+
+        this.columnTasks = map
+
         // avisa o pai sobre os usuários
         this.$emit('update-users', this.users)
       } catch (error) {
@@ -179,40 +202,32 @@ export default {
       }
     },
 
-    truncate(text, maxLength) {
-      if (!text) return ''
-      return text.length > maxLength ? text.slice(0, maxLength) + '...' : text
-    },
-
     getChecklistCompleted(task) {
       return task.checklist?.filter((item) => item.completed).length || 0
     },
 
-    // 🔹 Filtra tarefas por coluna + usuário + busca
-    filteredTasks(columnId) {
-      let tasks = this.tasks.filter(
-        (t) => String(t.columnId) === String(columnId)
-      )
-
+    // 🔹 Aplica filtro de usuário + busca
+    shouldShowTask(task) {
       const filteredUserId = this.filteredUserId
       const searchTerm = this.searchTerm
 
       if (filteredUserId) {
-        tasks = tasks.filter(
-          (t) => String(t.assignedUser) === String(filteredUserId)
-        )
+        if (String(task.assignedUser) !== String(filteredUserId)) {
+          return false
+        }
       }
 
       if (searchTerm && searchTerm.length > 1) {
         const search = searchTerm.toLowerCase()
-        tasks = tasks.filter(
-          (t) =>
-            (t.title && t.title.toLowerCase().includes(search)) ||
-            (t.description && t.description.toLowerCase().includes(search))
-        )
+        const inTitle = task.title?.toLowerCase().includes(search)
+        const inDescription = task.description?.toLowerCase().includes(search)
+
+        if (!inTitle && !inDescription) {
+          return false
+        }
       }
 
-      return tasks
+      return true
     },
 
     // 🔹 Abrir modal para criar nova tarefa
@@ -221,33 +236,33 @@ export default {
         title: '',
         description: '',
         dueDate: '',
+        duration: '',
         checklist: [],
         assignedUser: '',
-        columnId: column.id
+        columnId: column.id,
+        type: 'tarefa'
       }
       this.showModal = true
     },
 
     // 🔹 Abrir modal para editar tarefa existente
     editTask(task) {
-      this.selectedTask = { ...task }
+      this.selectedTask = {
+        ...task,
+        dueDate: task.dueDate ? task.dueDate.slice(0, 10) : ''
+      }
       this.showModal = true
     },
-
     // 🔹 Salvar (criar ou atualizar) tarefa no backend
     async handleSaveTask(task) {
       try {
-        const existingIndex = this.tasks.findIndex((t) => t.id === task.id)
+        const existing = this.tasks.find((t) => t.id === task.id)
         let savedTask
 
-        if (existingIndex !== -1) {
-          // atualizar tarefa existente
+        if (existing) {
           savedTask = await updateTask(task.id, task)
-          this.tasks.splice(existingIndex, 1, savedTask)
         } else {
-          // criar nova tarefa
           savedTask = await createTask(task)
-          this.tasks.push(savedTask)
         }
 
         const isDone = String(savedTask.columnId) === '3'
@@ -256,6 +271,9 @@ export default {
         }
 
         this.showModal = false
+
+        // Recarrega tudo para sincronizar tasks + columnTasks
+        await this.fetchData()
       } catch (error) {
         console.error(error)
         this.errorMsg = 'Erro ao salvar tarefa.'
@@ -266,14 +284,15 @@ export default {
     async handleDeleteTask(taskId) {
       try {
         await deleteTask(taskId)
-        this.tasks = this.tasks.filter((t) => t.id !== taskId)
         this.showModal = false
+        await this.fetchData()
       } catch (error) {
         console.error(error)
         this.errorMsg = 'Erro ao excluir tarefa.'
       }
     },
 
+    // 🔹 Quando arrasta card de uma coluna para outra
     // 🔹 Quando arrasta card de uma coluna para outra
     async onTaskMoved(evt, newColumnId) {
       const el = evt.item
@@ -286,15 +305,23 @@ export default {
       }
 
       const previousColumnId = task.columnId
-      task.columnId = String(newColumnId)
+      task.columnId = newColumnId
 
       try {
-        await updateTask(task.id, { columnId: task.columnId })
+        await moveTask(task.id, newColumnId)
+
+        const isDone = String(newColumnId) === '3'
+        if (isDone) {
+          this.notifyTaskCompleted(task.title)
+        }
+
+        // Recarrega do backend pra garantir consistência
+        await this.fetchData()
       } catch (error) {
         console.error(error)
         this.errorMsg = 'Erro ao mover tarefa.'
-        // volta visualmente se der ruim no backend
         task.columnId = previousColumnId
+        await this.fetchData()
       }
     },
 
@@ -311,6 +338,7 @@ export default {
 </script>
 
 <style scoped>
+/* (seu CSS original, mantive igual) */
 .tarefando-kanban-bg {
   min-height: 100vh;
   min-width: 100vw;

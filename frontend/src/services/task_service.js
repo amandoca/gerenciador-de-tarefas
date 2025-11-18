@@ -11,11 +11,16 @@ export async function createTask(task) {
   return response.data
 }
 
-export async function updateTask(id, payload) {
-  const response = await api.put(`/kanban/tasks/${id}`, payload)
+export async function updateTask(id, data) {
+  const response = await api.put(`/kanban/tasks/${id}`, data)
   return response.data
 }
 
 export async function deleteTask(id) {
   await api.delete(`/kanban/tasks/${id}`)
+}
+
+export async function moveTask(id, columnId) {
+  const response = await api.put(`/kanban/tasks/${id}/move`, { columnId })
+  return response.data
 }
