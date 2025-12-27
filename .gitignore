@@ -15,6 +15,11 @@ frontend/dist/
 node_modules/
 dist/
 
+# ========= EXAMPLES =========
+!backend/.env.docker.example
+!backend/.env.local.example
+!frontend/.env.example
+
 # ========= IDE / EDITOR =========
 .vscode/
 .idea/
