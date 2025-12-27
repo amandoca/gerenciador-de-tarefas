@@ -1,0 +1,25 @@
+# ========= BACKEND =========
+backend/node_modules/
+backend/.env
+backend/.env.*
+
+# ========= FRONTEND =========
+frontend/node_modules/
+frontend/.env
+frontend/.env.*
+frontend/dist/
+
+# ========= APP ROOT =========
+.env
+.env.*
+node_modules/
+dist/
+
+# ========= IDE / EDITOR =========
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

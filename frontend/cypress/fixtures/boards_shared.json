@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "name": "Board Compartilhado",
+    "ownerUserId": 1,
+    "ownerName": "Owner",
+    "visibility": "SHARED"
+  }
+]

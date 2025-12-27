@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "name": "Board Privado",
+    "ownerUserId": 1,
+    "ownerName": "Owner",
+    "visibility": "PRIVATE"
+  }
+]

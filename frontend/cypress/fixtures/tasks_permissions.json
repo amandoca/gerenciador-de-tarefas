@@ -1,0 +1,17 @@
+[
+  {
+    "id": 300,
+    "userId": 1,
+    "boardId": 1,
+    "title": "Task Protegida",
+    "description": "Descrição existente",
+    "dueDate": "2026-03-10",
+    "duration": "01:00",
+    "columnId": 11,
+    "assignedUser": 1,
+    "type": "tarefa",
+    "checklist": [
+      { "id": 1, "text": "Item existente", "completed": false }
+    ]
+  }
+]

@@ -1,0 +1,50 @@
+{
+  "name": "gerenciador-de-tarefas",
+  "version": "1.0.0",
+  "description": "SPA inspirado no Trello para gerenciamento de tarefas",
+  "author": "Amanda Souza",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "eslint --ext .js,.vue,.ts src --fix",
+    "format": "prettier --write \"src/**/*.{js,vue,ts,scss,css,json,md}\"",
+    "e2e:open": "cypress open --e2e",
+    "e2e:run": "cypress run --e2e"
+  },
+  "dependencies": {
+    "animate.css": "^4.1.1",
+    "axios": "^1.13.2",
+    "core-js": "^3.6.5",
+    "vue": "^3.2.0",
+    "vue-google-oauth2": "^1.4.0",
+    "vue-i18n": "^10.0.5",
+    "vue-router": "^4.0.0",
+    "vue-toastification": "^2.0.0-rc.5",
+    "vuedraggable": "^4.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.5.13",
+    "babel-eslint": "^10.1.0",
+    "concurrently": "^9.1.2",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "eslint-plugin-vue": "^9.32.0",
+    "prettier": "^3.4.1",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "vite": "^6.0.1",
+    "vue-template-compiler": "^2.6.11",
+    "cypress": "^13.6.0",
+    "cypress-real-events": "^1.12.0"
+  }
+}

@@ -1,0 +1,45 @@
+%% Diagrama de casos de uso baseado em docs/kanban_use_cases.md
+flowchart LR
+  %% Actors
+  Owner[Owner]
+  Member[Membro]
+  Creator[Criador]
+  User[Usuario]
+
+  %% System boundary
+  subgraph Sistema_Kanban [Sistema Kanban]
+    UC01((UC-01: Acessar Kanban e carregar dados))
+    UC02((UC-02: Gerenciar boards))
+    UC03((UC-03: Compartilhar board))
+    UC04((UC-04: Alterar visibilidade))
+    UC05((UC-05: Visualizar tarefas por visibilidade))
+    UC06((UC-06: Criar tarefa))
+    UC07((UC-07: Editar tarefa por perfil))
+    UC08((UC-08: Mover tarefa))
+    UC09((UC-09: Excluir tarefa))
+    UC10((UC-10: Gerenciar checklist))
+    UC11((UC-11: Preferencias de background))
+  end
+
+  %% Associations
+  User --> UC01
+  User --> UC11
+
+  Owner --> UC02
+  Owner --> UC03
+  Owner --> UC04
+  Owner --> UC05
+  Owner --> UC06
+  Owner --> UC07
+  Owner --> UC08
+  Owner --> UC09
+  Owner --> UC10
+
+  Member --> UC05
+  Member --> UC06
+  Member --> UC07
+  Member --> UC08
+  Member --> UC10
+
+  Creator --> UC07
+  Creator --> UC09
