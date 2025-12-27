@@ -1,0 +1,205 @@
+{
+  "app": {
+    "name": "Tarefando",
+    "logoAlt": "Logo Tarefando",
+    "footerCta": "— Mais foco, menos caos :)",
+    "footerCtaRegister": "— Mais foco, menos caos."
+  },
+  "common": {
+    "or": "ou",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "saving": "Salvando...",
+    "delete": "Excluir",
+    "deleting": "Excluindo...",
+    "add": "Adicionar",
+    "language": "Idioma",
+    "languages": {
+      "ptBr": "Português (Brasil)",
+      "enUs": "English (US)"
+    },
+    "userFallback": "Usuário",
+    "noName": "Sem nome",
+    "notificationsUnsupported": "Seu navegador não suporta notificações.",
+    "someone": "alguém"
+  },
+  "auth": {
+    "labels": {
+      "email": "E-mail",
+      "password": "Senha",
+      "name": "Nome"
+    },
+    "password": {
+      "show": "Mostrar senha",
+      "hide": "Ocultar senha"
+    },
+    "login": {
+      "slogan": "Plataforma moderna para produtividade de equipes e profissionais",
+      "sloganEmoji": "🚀",
+      "submit": "Entrar",
+      "forgot": "Esqueci minha senha",
+      "newHere": "Novo aqui?",
+      "createAccount": "Crie sua conta",
+      "welcome": "Bem-vindo(a), {name}!",
+      "invalidCredentials": "E-mail ou senha inválidos.",
+      "googleError": "Erro de login Google."
+    },
+    "logoutSuccess": "Sessão encerrada com sucesso.",
+    "accessDenied": "Acesso negado! Faça login para acessar o Kanban.",
+    "register": {
+      "title": "Crie sua conta",
+      "slogan": "Acesso rápido ao seu espaço de produtividade",
+      "sloganEmoji": "✨",
+      "submit": "Cadastrar",
+      "hasAccount": "Já tem conta?",
+      "goToLogin": "Faça login",
+      "success": "Conta criada com sucesso! Faça login para continuar.",
+      "error": "Erro ao cadastrar usuário."
+    },
+    "forgot": {
+      "title": "Esqueci minha senha",
+      "subtitle": "Digite seu e-mail. Se existir uma conta associada a ele, enviaremos um link para redefinir sua senha.",
+      "ready": "Pronto",
+      "resendIn": "Aguarde {seconds}s para reenviar",
+      "submit": "Enviar link",
+      "emailSent": "Se este email existir, enviaremos um link para redefinir a senha.",
+      "googleAccount": "Esse email usa login com Google. Volte e entre com o Google.",
+      "error": "Erro ao solicitar recuperação."
+    },
+    "backToLogin": "Voltar para login",
+    "reset": {
+      "title": "Redefinir senha",
+      "subtitle": "Defina uma nova senha para:",
+      "newPassword": "Nova senha",
+      "confirmPassword": "Confirmar nova senha",
+      "rulesTitle": "Requisitos da senha",
+      "rules": {
+        "minLength": "Mínimo 8 caracteres",
+        "uppercase": "1 letra maiúscula",
+        "lowercase": "1 letra minúscula",
+        "number": "1 número",
+        "special": "1 caractere especial"
+      },
+      "strength": "Força: {score}/5",
+      "submit": "Salvar nova senha",
+      "invalidLink": "Link inválido. Solicite a recuperação novamente.",
+      "rulesError": "Sua senha ainda não atende todos os requisitos.",
+      "mismatch": "As senhas não coincidem.",
+      "success": "Senha atualizada com sucesso!",
+      "error": "Erro ao redefinir senha."
+    }
+  },
+  "kanban": {
+    "addTask": "Adicionar Tarefa",
+    "taskHasDescription": "Esse card possui descrição",
+    "checklistProgress": "{done}/{total} itens concluídos",
+    "columns": {
+      "todo": "A Fazer",
+      "inProgress": "Em Progresso",
+      "done": "Concluído"
+    },
+    "taskHiddenWarning": "A tarefa foi criada, mas não aparece para você porque foi atribuída a outra pessoa. Em quadros privados, membros só veem tarefas atribuídas a eles.",
+    "errors": {
+      "noBoard": "Nenhum board encontrado para este usuário.",
+      "load": "Erro ao carregar dados do Kanban.",
+      "boardLoading": "Board ainda carregando. Tente novamente.",
+      "saveTask": "Erro ao salvar tarefa.",
+      "deleteTask": "Erro ao excluir tarefa.",
+      "moveTask": "Erro ao mover tarefa."
+    },
+    "notifications": {
+      "taskDoneTitle": "Tarefa concluída!",
+      "taskDoneBody": "A tarefa \"{title}\" foi concluída."
+    },
+    "header": {
+      "toggleSidebar": "Abrir ou recolher menu",
+      "clearFilter": "Limpar filtro",
+      "searchPlaceholder": "Buscar tarefa..."
+    },
+    "background": {
+      "change": "Alterar background"
+    },
+    "sidebar": {
+      "toggleLabel": "Expandir ou recolher menu",
+      "workspaceLabel": "workspace",
+      "yourBoards": "Seus quadros",
+      "newBoard": "Novo",
+      "sharedBy": "compartilhado por",
+      "rename": "Renomear",
+      "delete": "Excluir",
+      "logout": "Sair",
+      "visibility": {
+        "label": "Visibilidade",
+        "private": "Privado",
+        "shared": "Compartilhado",
+        "privateHint": "Membros veem apenas tarefas atribuídas a eles.",
+        "sharedHint": "Membros veem todas as tarefas do quadro.",
+        "updated": "Visibilidade atualizada!",
+        "error": "Erro ao atualizar visibilidade."
+      },
+      "createBoardTitle": "Novo quadro",
+      "renameBoardTitle": "Renomear quadro",
+      "boardNameLabel": "Nome do quadro",
+      "boardNamePlaceholder": "Ex: Projeto Pessoal",
+      "deleteTitle": "Excluir quadro?",
+      "deleteConfirm": "Tem certeza que deseja excluir",
+      "deleteWarning": "Ao excluir, todas as tarefas e checklists deste quadro serão apagadas. Essa ação não pode ser desfeita.",
+      "created": "Quadro criado!",
+      "renamed": "Nome atualizado!",
+      "deleted": "Quadro excluído!",
+      "errors": {
+        "emptyName": "Digite um nome.",
+        "invalidBoard": "Board inválido.",
+        "saveBoard": "Erro ao salvar o quadro.",
+        "deleteBoard": "Erro ao excluir o quadro."
+      }
+    },
+    "taskModal": {
+      "editTitle": "Editar Tarefa",
+      "newTitle": "Nova Tarefa",
+      "titleLabel": "Título",
+      "titlePlaceholder": "Título da Tarefa",
+      "typeLabel": "Tipo:",
+      "types": {
+        "task": "Tarefa",
+        "story": "História",
+        "bug": "Bug"
+      },
+      "typeLabels": {
+        "task": "🛠️ Tarefa",
+        "story": "📚 História",
+        "bug": "🐛 Bug"
+      },
+      "descriptionLabel": "Descrição",
+      "descriptionPlaceholder": "Descreva a tarefa...",
+      "dueDate": "Prazo",
+      "duration": "Duração",
+      "durationPlaceholder": "Ex: 2h 30m",
+      "column": "Coluna",
+      "people": "Pessoas",
+      "assignee": "Responsável",
+      "selectAssignee": "Selecione...",
+      "invitePerson": "Convidar pessoa",
+      "inviteOpenHint": "Digite o email abaixo",
+      "invitePlaceholder": "email (exemplo.com)",
+      "checklist": "Checklist",
+      "checklistComplete": "Concluir {text}",
+      "addChecklistItem": "Adicionar um item",
+      "deleteChecklistWarning": "A exclusão de uma checklist é permanente e não há como recuperá-la.",
+      "deleteChecklistConfirm": "Deletar checklist",
+      "deleteTaskWarning": "Tem certeza que deseja excluir esta tarefa? Esta ação é permanente.",
+      "deleteTaskConfirm": "Deletar tarefa",
+      "creatorEditHint": "Você criou esta tarefa e pode editar título, descrição e tipo.",
+      "limitedEditHint": "Você pode mover, atualizar prazo, duração e checklist.",
+      "owner": "Criador",
+      "guest": "Convidado",
+      "memberAdded": "Pessoa adicionada!",
+      "errors": {
+        "titleRequired": "O título é obrigatório!",
+        "durationFormat": "Preencha a duração no formato \"2h 30m\" ou \"01:45\"",
+        "boardMissing": "boardId não encontrado. Recarregue o board.",
+        "memberAdd": "Erro ao adicionar pessoa."
+      }
+    }
+  }
+}

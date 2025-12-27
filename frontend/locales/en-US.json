@@ -1,0 +1,205 @@
+{
+  "app": {
+    "name": "Tarefando",
+    "logoAlt": "Tarefando logo",
+    "footerCta": "— More focus, less chaos :)",
+    "footerCtaRegister": "— More focus, less chaos."
+  },
+  "common": {
+    "or": "or",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "add": "Add",
+    "language": "Language",
+    "languages": {
+      "ptBr": "Portuguese (Brazil)",
+      "enUs": "English (US)"
+    },
+    "userFallback": "User",
+    "noName": "No name",
+    "notificationsUnsupported": "Your browser does not support notifications.",
+    "someone": "someone"
+  },
+  "auth": {
+    "labels": {
+      "email": "Email",
+      "password": "Password",
+      "name": "Name"
+    },
+    "password": {
+      "show": "Show password",
+      "hide": "Hide password"
+    },
+    "login": {
+      "slogan": "A modern platform for productivity for teams and professionals",
+      "sloganEmoji": "🚀",
+      "submit": "Sign in",
+      "forgot": "Forgot my password",
+      "newHere": "New here?",
+      "createAccount": "Create your account",
+      "welcome": "Welcome, {name}!",
+      "invalidCredentials": "Invalid email or password.",
+      "googleError": "Google login error."
+    },
+    "logoutSuccess": "Signed out successfully.",
+    "accessDenied": "Access denied! Sign in to access the Kanban.",
+    "register": {
+      "title": "Create your account",
+      "slogan": "Quick access to your productivity space",
+      "sloganEmoji": "✨",
+      "submit": "Sign up",
+      "hasAccount": "Already have an account?",
+      "goToLogin": "Sign in",
+      "success": "Account created successfully! Sign in to continue.",
+      "error": "Error creating user."
+    },
+    "forgot": {
+      "title": "Forgot my password",
+      "subtitle": "Enter your email. If an account exists, we will send a link to reset your password.",
+      "ready": "Ready",
+      "resendIn": "Wait {seconds}s to resend",
+      "submit": "Send link",
+      "emailSent": "If this email exists, we will send a link to reset the password.",
+      "googleAccount": "This email uses Google login. Go back and sign in with Google.",
+      "error": "Error requesting recovery."
+    },
+    "backToLogin": "Back to login",
+    "reset": {
+      "title": "Reset password",
+      "subtitle": "Set a new password for:",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "rulesTitle": "Password requirements",
+      "rules": {
+        "minLength": "Minimum 8 characters",
+        "uppercase": "1 uppercase letter",
+        "lowercase": "1 lowercase letter",
+        "number": "1 number",
+        "special": "1 special character"
+      },
+      "strength": "Strength: {score}/5",
+      "submit": "Save new password",
+      "invalidLink": "Invalid link. Request recovery again.",
+      "rulesError": "Your password does not meet all requirements yet.",
+      "mismatch": "Passwords do not match.",
+      "success": "Password updated successfully!",
+      "error": "Error resetting password."
+    }
+  },
+  "kanban": {
+    "addTask": "Add Task",
+    "taskHasDescription": "This card has a description",
+    "checklistProgress": "{done}/{total} items completed",
+    "columns": {
+      "todo": "To Do",
+      "inProgress": "In Progress",
+      "done": "Done"
+    },
+    "taskHiddenWarning": "The task was created, but it does not appear to you because it was assigned to someone else. In private boards, members only see tasks assigned to them.",
+    "errors": {
+      "noBoard": "No board found for this user.",
+      "load": "Error loading Kanban data.",
+      "boardLoading": "Board still loading. Try again.",
+      "saveTask": "Error saving task.",
+      "deleteTask": "Error deleting task.",
+      "moveTask": "Error moving task."
+    },
+    "notifications": {
+      "taskDoneTitle": "Task completed!",
+      "taskDoneBody": "The task \"{title}\" was completed."
+    },
+    "header": {
+      "toggleSidebar": "Open or collapse menu",
+      "clearFilter": "Clear filter",
+      "searchPlaceholder": "Search task..."
+    },
+    "background": {
+      "change": "Change background"
+    },
+    "sidebar": {
+      "toggleLabel": "Expand or collapse menu",
+      "workspaceLabel": "workspace",
+      "yourBoards": "Your boards",
+      "newBoard": "New",
+      "sharedBy": "shared by",
+      "rename": "Rename",
+      "delete": "Delete",
+      "logout": "Log out",
+      "visibility": {
+        "label": "Visibility",
+        "private": "Private",
+        "shared": "Shared",
+        "privateHint": "Members only see tasks assigned to them.",
+        "sharedHint": "Members see all tasks on the board.",
+        "updated": "Visibility updated!",
+        "error": "Error updating visibility."
+      },
+      "createBoardTitle": "New board",
+      "renameBoardTitle": "Rename board",
+      "boardNameLabel": "Board name",
+      "boardNamePlaceholder": "E.g.: Personal Project",
+      "deleteTitle": "Delete board?",
+      "deleteConfirm": "Are you sure you want to delete",
+      "deleteWarning": "By deleting, all tasks and checklists in this board will be removed. This action cannot be undone.",
+      "created": "Board created!",
+      "renamed": "Name updated!",
+      "deleted": "Board deleted!",
+      "errors": {
+        "emptyName": "Enter a name.",
+        "invalidBoard": "Invalid board.",
+        "saveBoard": "Error saving board.",
+        "deleteBoard": "Error deleting board."
+      }
+    },
+    "taskModal": {
+      "editTitle": "Edit Task",
+      "newTitle": "New Task",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Task title",
+      "typeLabel": "Type:",
+      "types": {
+        "task": "Task",
+        "story": "Story",
+        "bug": "Bug"
+      },
+      "typeLabels": {
+        "task": "🛠️ Task",
+        "story": "📚 Story",
+        "bug": "🐛 Bug"
+      },
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Describe the task...",
+      "dueDate": "Due date",
+      "duration": "Duration",
+      "durationPlaceholder": "Ex: 2h 30m",
+      "column": "Column",
+      "people": "People",
+      "assignee": "Assignee",
+      "selectAssignee": "Select...",
+      "invitePerson": "Invite person",
+      "inviteOpenHint": "Type the email below",
+      "invitePlaceholder": "email (example.com)",
+      "checklist": "Checklist",
+      "checklistComplete": "Complete {text}",
+      "addChecklistItem": "Add an item",
+      "deleteChecklistWarning": "Deleting a checklist is permanent and cannot be recovered.",
+      "deleteChecklistConfirm": "Delete checklist",
+      "deleteTaskWarning": "Are you sure you want to delete this task? This action is permanent.",
+      "deleteTaskConfirm": "Delete task",
+      "creatorEditHint": "You created this task and can edit title, description, and type.",
+      "limitedEditHint": "You can move tasks, update due date, duration, and checklist.",
+      "owner": "Creator",
+      "guest": "Guest",
+      "memberAdded": "Person added!",
+      "errors": {
+        "titleRequired": "Title is required!",
+        "durationFormat": "Fill the duration in the format \"2h 30m\" or \"01:45\"",
+        "boardMissing": "boardId not found. Reload the board.",
+        "memberAdd": "Error adding person."
+      }
+    }
+  }
+}

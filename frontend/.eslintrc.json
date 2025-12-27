@@ -1,0 +1,38 @@
+{
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:vue/vue3-recommended",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "semi": false, // Remove pontos e vírgulas
+        "singleQuote": true,
+        "trailingComma": "none"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "cypress/**/*.js",
+        "cypress.config.js"
+      ],
+      "env": {
+        "mocha": true,
+        "node": true
+      },
+      "globals": {
+        "Cypress": "readonly",
+        "cy": "readonly",
+        "expect": "readonly"
+      }
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+[
+  { "id": 11, "name": "A Fazer", "order_index": 1 },
+  { "id": 12, "name": "Em Progresso", "order_index": 2 },
+  { "id": 13, "name": "Concluído", "order_index": 3 }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "id": 100,
+    "userId": 1,
+    "boardId": 1,
+    "title": "Task do Membro",
+    "description": "Apenas atribuída ao membro",
+    "dueDate": null,
+    "duration": null,
+    "columnId": 11,
+    "assignedUser": 2,
+    "type": "tarefa",
+    "checklist": []
+  }
+]

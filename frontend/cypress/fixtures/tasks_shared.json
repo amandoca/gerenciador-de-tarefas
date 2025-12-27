@@ -1,0 +1,28 @@
+[
+  {
+    "id": 200,
+    "userId": 1,
+    "boardId": 1,
+    "title": "Task do Owner",
+    "description": "Task atribuída ao owner",
+    "dueDate": null,
+    "duration": null,
+    "columnId": 11,
+    "assignedUser": 1,
+    "type": "tarefa",
+    "checklist": []
+  },
+  {
+    "id": 201,
+    "userId": 2,
+    "boardId": 1,
+    "title": "Task do Membro",
+    "description": "Task atribuída ao membro",
+    "dueDate": null,
+    "duration": null,
+    "columnId": 12,
+    "assignedUser": 2,
+    "type": "bug",
+    "checklist": []
+  }
+]
